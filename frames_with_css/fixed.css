@@ -1,0 +1,91 @@
+/* Magic to do 'frames' from CSS.
+ * 
+ * (c) Stian Søiland <stian@soiland.no> 2004
+ * 
+ * Parts of this file is copied freely from
+ * the site http://devnull.tagsoup.com/fixed/
+ * Many thanks to Eric Bednarz <devnull@tagsoup.com>
+ *
+ * You may use/modify/distribute/etc this source for free as long as you
+ * keep the above copyright notices. 
+ *
+ * Essentially the trick is to make body only 100% high (ie. the screen
+ * size), and then place div-boxes out where you want your "frames".
+ * 
+ * This allows fixed positioning even in Microsoft IE, as we can use
+ * position: absolute for elements directly within body.
+ * 
+ * See the file fixed_ie.css for details on IE compatibility
+ * hacks.
+ * 
+ */
+body {
+  margin: 0;
+}
+
+div.left,div.bottom,div.top {
+  position: absolute;  
+  margin: 0;
+
+  /* Debuglines */
+  /*  border: 1px dotted #aaa;*/
+
+  /* If scrolling is needed: */
+  overflow: auto; 
+}
+div.left {
+  /* Placed on the left side */
+  top: 0;
+  left: 0;
+  /* Width of left */
+  width: 10em;
+  height: 100%;
+}
+div.left div {
+  position: static; 
+  /* Restore to normal values */
+  width: auto;
+  height: auto;
+}
+
+div.bottom  {
+  /* Placed in the lower part */
+  bottom: 0;
+  /* Don't overlap the left-side */
+  left: 10em;
+  /* Full width, this doesn't work completely with IE, but see
+     fixed_ie5.css for details. */
+  right: 0;
+  /* Height of bottom part */
+  height: 15%;
+}
+div.bottom div {
+  /* Reset to normal values */  
+  left: 0;
+  right: auto;
+  height: auto;
+}
+
+div.top {
+  /* In effect the rest of the screen, the main part if you like.  */
+  top: 0;
+  /* width of .left */
+  left: 10em;
+  right: 0;
+  /* 100% - height of .bottom  */
+  height: 85%;
+}
+div.top div {
+  /* Reset to normal values */  
+  position: static; 
+  left: 0;
+  right: auto;
+  height: auto;
+}
+
+/* This trick is to fix something i IE 5 on Mac..  */
+@media screen {
+  body>div.left,body>div.bottom,body>div.top {
+    position: fixed;
+  }
+}

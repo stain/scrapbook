@@ -1,0 +1,89 @@
+#!/usr/bin/env python
+"""Bootstrapper for downloading and installing programs
+(c) Stian Soiland <stian@soiland.no> 2004
+Licence: GNU Public License (GPL) """
+
+__version__ = "$Revision: 1.11 $".replace("Revision: ", "").replace("$", "")
+
+import urllib
+import tempfile
+import popen2
+import os
+import sys
+(True, False) = (1==1, 0==1)
+
+# Base publishing root with trailing /
+ROOT="http://www.soiland.no/rc/"
+TARFILE="forgetrc.tar"
+EXECUTABLE="install-forgetrc"
+
+# duplicated to make file standalone
+def pgp_verify(file, keyring):
+    cmd = ("gpg", "--help")
+    pgp = popen2.Popen3(cmd)
+    pgp.fromchild.read()
+    if pgp.wait():
+        print >>sys.stderr, "WARNING! Could not execute gpg"
+        return False
+    os.chmod(keyring, 0600)    
+    cmd = ("gpg", "--no-default-keyring",
+           "--keyring", keyring, 
+           "--trusted-key", "411063A3A0FFD119",
+           "--verify", file + ".asc", file)
+    pgp = popen2.Popen3(cmd)
+    if pgp.wait():
+        print >>sys.stderr, "WARNING WARNING!"
+        print >>sys.stderr, "Could NOT verify signature of file %s" % file
+        print >>sys.stderr, "Aborted."
+        # We will NEVER accept this!
+        sys.exit(99)
+    return True    
+
+
+def get_forgetrc():
+    archive = tempfile.mktemp(".tar")
+    url = ROOT + TARFILE
+    print "Fetching archive", url
+    urllib.urlretrieve(url, archive)
+    urllib.urlretrieve(url + ".asc", archive + ".asc")
+    return archive
+
+def unpack_forgetrc(archive):
+    # go somewhere alone
+    tempdir = tempfile.mktemp()
+    os.mkdir(tempdir, 0700)
+    os.chdir(tempdir)
+    # might fail  
+    tar = popen2.Popen3(("tar", "xf", archive))
+    if tar.wait():
+        print "Could not untar", archive, "to", tempdir
+        sys.exit(1)
+    # Ok, it worked, 
+    # assume a directory 'forgetrc' was made 
+    tempdir = os.path.join(tempdir, TARFILE.replace(".tar", ""))
+    os.chdir(tempdir)
+    
+    # we'll except forgetrc.tar to contain
+    # the script EXECUTABLE - leave controll to that one  
+    program = os.path.join(tempdir, EXECUTABLE)
+    if not os.path.isfile(program):
+        print "Archive didn't contain executable", EXECUTABLE
+        sys.exit(4)
+    print "Executing %s" % program
+    os.execl(program, program)
+    
+if __name__ == "__main__":
+    if sys.argv[1:2] in ( ["-h"], ["--help"]):
+        print sys.argv[0], __version__
+        print __doc__
+        sys.exit(0)
+    archive = get_forgetrc()
+    prog = sys.argv[0]
+    # skip signature verify first time
+    if not prog.count("kickstart"): 
+        # assume we are in $HOME/.forgetrc
+        root = os.path.abspath(os.path.dirname(prog))
+        keyring = os.path.join(root, "gpg-keyring")
+        pgp_verify(archive, keyring)
+    unpack_forgetrc(archive)
+

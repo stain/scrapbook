@@ -1,0 +1,26 @@
+<search
+ version="0.2"
+ name="NTNU tlf"
+ description="Searches NTNU's telephone directory" 
+ action="http://www.ntnu.no/telefonkat/finn/"
+ searchForm="http://www.ntnu.no/telefonkat/finn/"
+ method="GET" >
+
+<input name="sourceid" value="Mozilla-search">
+<input name="org" value="NTNU">
+<input name="sok" value="S%F8k">
+<input name="navn" user>
+
+<interpret 
+ resultListStart="<!--hits start-->"
+ resultListEnd="<!--hits end-->"
+ resultItemStart="<!--hit start-->"
+ resultItemEnd="<!--hit end-->"
+>
+</search>
+
+<browser
+ update="http://soiland.no/plugins/telefonkat.src" 
+ updateIcon="http://soiland.no/plugins/telefonkat.png"
+ updateCheckDays="3" 
+>

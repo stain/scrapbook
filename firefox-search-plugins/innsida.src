@@ -1,0 +1,24 @@
+<search
+ version="0.2"
+ name="Innsida"
+ description="Searches NTNU's Innsida" 
+ action="https://innsida.ntnu.no/sok_intern.php"
+ searchForm="https://innsida.ntnu.no/sok_intern.php"
+ method="GET" >
+
+<input name="sourceid" value="Mozilla-search">
+<input name="query" user>
+
+<interpret 
+ resultListStart="<dl class=nyhetb>"
+ resultListEnd="</dl>"
+ resultItemStart="<dt class=nyhetb>"
+ resultItemEnd="</dt>"
+>
+</search>
+
+<browser
+ update="http://soiland.no/plugins/innsida.src" 
+ updateIcon="http://soiland.no/plugins/innsida.png"
+ updateCheckDays="3" 
+>

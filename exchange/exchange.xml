@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<a:multistatus xmlns='DAV:' xmlns:a='DAV:' xmlns:c='xml:' xmlns:b='urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/' xmlns:e='urn:schemas:httpmail:' xmlns:d='urn:schemas:calendar:' xmlns:g='urn:schemas:contacts:' xmlns:f='http://schemas.microsoft.com/exchange/' xmlns:i='urn:schemas:mailheader:' xmlns:h='urn:schemas-microsoft-com:office:office' xmlns:k='urn:schemas-microsoft-com:exch-data:' xmlns:j='http://schemas.microsoft.com/repl/'>
+  <a:response>
+    <a:href>https://exchange.ntnu.no/Exchange/stain/Kalender/Sexparty.EML</a:href>
+    <a:propstat>
+      <a:status>HTTP/1.1 200 OK</a:status>
+      <a:prop>
+        <d:alldayevent b:dt='boolean'>0</d:alldayevent>
+        <e:textdescription>Kom for mye moor</e:textdescription>
+        <a:contentclass>urn:content-classes:appointment</a:contentclass>
+        <a:supportedlock>
+          <lockentry>
+            <locktype>
+              <transaction>
+                <groupoperation/>
+              </transaction>
+            </locktype>
+            <lockscope>
+              <local/>
+            </lockscope>
+          </lockentry>
+        </a:supportedlock>
+        <d:busystatus>Busy</d:busystatus>
+        <f:permanenturl>https://exchange.ntnu.no/Exchange/stain/-FlatUrlSpace-/c822d1cf01a3d548bc079153e486357a-1997a/c822d1cf01a3d548bc079153e486357a-1ae79</f:permanenturl>
+        <a:getcontenttype>message/rfc822</a:getcontenttype>
+        <a:id>AQEAAAAAAZl6AQAAAAABrnkAAAAA</a:id>
+        <f:mid b:dt='i8'>8767946624048562177</f:mid>
+        <d:uid>KOrganizer-1921761288.149</d:uid>
+        <a:isfolder b:dt='boolean'>0</a:isfolder>
+        <a:resourcetype/>
+        <d:method>REQUEST</d:method>
+        <a:getetag>"c822d1cf01a3d548bc079153e486357a00000001b8f3"</a:getetag>
+        <lockdiscovery/>
+        <f:outlookmessageclass>IPM.appointment</f:outlookmessageclass>
+        <a:creationdate b:dt='dateTime.tz'>2003-09-03T12:22:40.239Z</a:creationdate>
+        <f:ntsecuritydescriptor b:dt='bin.base64'>CAAEAAAAAAABAC+MMAAAADwAAAAAAAAAFAAAAAIAHAABAAAAARAUAL8PHwABAQAAAAAABQcAAAABAQAAAAAABRIAAAABAgAAAAAABSAAAAAgAgAA</f:ntsecuritydescriptor>
+        <d:lastmodified b:dt='dateTime.tz'>2003-09-03T12:22:36.000Z</d:lastmodified>
+        <d:dtstart b:dt='dateTime.tz'>2003-09-01T21:00:00.000Z</d:dtstart>
+        <d:location>Club4</d:location>
+        <i:subject>Sexparty</i:subject>
+        <d:duration b:dt='int'>7200</d:duration>
+        <e:htmldescription>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
+&lt;HTML>
+&lt;HEAD>
+&lt;META NAME="Generator" CONTENT="MS Exchange Server version 6.5.6944.0">
+&lt;TITLE>Sexparty&lt;/TITLE>
+&lt;/HEAD>
+&lt;BODY>
+&lt;!-- Converted from text/plain format -->
+
+&lt;P>&lt;FONT SIZE=2>Kom for mye moor&lt;/FONT>
+&lt;/P>
+
+&lt;/BODY>
+&lt;/HTML></e:htmldescription>
+        <a:ishidden b:dt='boolean'>0</a:ishidden>
+        <a:parentname>https://exchange.ntnu.no/Exchange/stain/Kalender/</a:parentname>
+        <d:meetingstatus>CONFIRMED</d:meetingstatus>
+        <e:subject>Sexparty</e:subject>
+        <a:getcontentlength b:dt='int'>387</a:getcontentlength>
+        <e:normalizedsubject>Sexparty</e:normalizedsubject>
+        <a:isstructureddocument b:dt='boolean'>0</a:isstructureddocument>
+        <j:repl-uid>rid:c822d1cf01a3d548bc079153e486357a00000001ae79</j:repl-uid>
+        <a:displayname>Sexparty.EML</a:displayname>
+        <a:href>https://exchange.ntnu.no/Exchange/stain/Kalender/Sexparty.EML</a:href>
+        <a:isreadonly b:dt='boolean'>0</a:isreadonly>
+        <d:instancetype b:dt='int'>0</d:instancetype>
+        <a:uid>AQEAAAAAAa55AAAAAAAAAAAAAAAA</a:uid>
+        <a:getlastmodified b:dt='dateTime.tz'>2003-09-03T12:22:40.239Z</a:getlastmodified>
+        <d:created b:dt='dateTime.tz'>2003-09-03T12:22:40.239Z</d:created>
+        <f:sensitivity b:dt='int'>0</f:sensitivity>
+        <d:dtend b:dt='dateTime.tz'>2003-09-01T23:00:00.000Z</d:dtend>
+        <e:hasattachment b:dt='boolean'>0</e:hasattachment>
+        <a:iscollection b:dt='boolean'>0</a:iscollection>
+        <e:read b:dt='boolean'>1</e:read>
+        <j:resourcetag>rt:c822d1cf01a3d548bc079153e486357a00000001ae79c822d1cf01a3d548bc079153e486357a00000001b8f3</j:resourcetag>
+        <d:sequence b:dt='int'>0</d:sequence>
+      </a:prop>
+    </a:propstat>
+  </a:response>
+</a:multistatus>

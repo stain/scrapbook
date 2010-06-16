@@ -1,0 +1,16 @@
+#!/bin/sh
+# exit on all errors
+set -e
+tempdir=`mktemp -d`
+cd $tempdir
+#cvs -Q -d /home/stud/stain/cvsroot export -r HEAD dotfiles
+svn -q export http://soiland.no/i/private/src/dotfiles/
+date '+%Y-%m-%d %H:%M:%S' > dotfiles/dotfiles.version
+tar cf dotfiles.tar dotfiles
+gpg -sb dotfiles.tar
+# publish
+scp -q dotfiles.tar* dotfiles/dotfiles.version soiland.no:soiland.no/rc/
+# unpack on web
+ssh soiland.no "cd soiland.no/rc/ && rm -rf dotfiles ; tar xf dotfiles.tar ; mv dotfiles/htaccess dotfiles/.htaccess"
+echo "Published on http://www.soiland.no/rc/"
+

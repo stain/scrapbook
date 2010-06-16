@@ -1,0 +1,36 @@
+<?xml version="1.0" lang="en" ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+   <head>
+     <title>Emulating frames with CSS</title>
+ 
+     <!-- Make a 'frameset' with three parts. -->
+     <link rel="stylesheet" type="text/css" 
+           media="screen" href="fixed.css" />
+     <!--[if IE]>
+     <link rel="stylesheet" type="text/css" 
+           media="screen" href="fixed_ie.css" />
+     <![endif]-->
+   </head>
+   <body>
+
+     <div class="left">
+       Menu <br />
+       Link1 <br />
+       link2
+     </div>  
+
+     <div class="top">
+       <div class="inner">
+         .. text to be in the top part
+       </div>
+     </div>
+
+     <div class="bottom">
+       <div class="inner">
+         .. text to be in the bottom part
+       </div>
+     </div>
+
+   </body>
+</html> 

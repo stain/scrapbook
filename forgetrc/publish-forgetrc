@@ -1,0 +1,18 @@
+#!/bin/bash
+# exit on all errors
+set -e
+tempdir=`mktemp -d`
+cd $tempdir
+#cvs -Q -d /home/stud/stain/cvsroot export -r HEAD forgetrc 
+svn -q export http://soiland.no/i/src/forgetrc/
+date '+%Y-%m-%d %H:%M:%S' > forgetrc/forgetrc.version
+tar cf forgetrc.tar forgetrc
+cp forgetrc/update-forgetrc kickstart
+cp forgetrc/forgetrc.version .
+echo "Eh.. du maa skrive PGP-passphrasen din. *host*"
+read -s passphrase
+echo $passphrase | gpg -sb --passphrase-fd 0 forgetrc.tar 
+echo $passphrase | gpg -sb --passphrase-fd 0 kickstart
+unset passphrase
+scp -q forgetrc.version forgetrc.tar* kickstart* soiland.no:soiland.no/rc/
+echo "Published on http://www.soiland.no/rc/"

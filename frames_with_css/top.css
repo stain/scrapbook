@@ -1,0 +1,91 @@
+/* Example on switching view only by CSS 
+ * (c) Stian Søiland 2004 <stian@soiland.no> 
+ * May be used freely as long as author is credited. 
+ */
+
+/* In addition to fixed.css, we still rely on the formattings
+   from style.css */
+@import "style.css";
+
+/* These statements are basically things from fixed.css with
+ * class names switched. In addition, some settings are restored
+ * to their default (mostly "auto") to counteract what's said
+ * in fixed.css
+ *
+ * If you think this is cool and want to do this in real life,
+ * rename 'top', 'left', and 'bottom' to more semantic names in your
+ * HTML, like 'menu', 'mainbody', and 'copyrights'. That way, 
+ * the stylesheets won't be as confusing as this one.
+ */
+
+/* Move boxes around */
+
+div.top {
+  /* Now 'top' is at the bottom */
+  top: auto;
+  bottom: 0;
+  left: 10em;
+  height: 90%;
+}
+
+div.left{
+  /* Now 'left' is at the top */
+  bottom: auto;
+  top: 0;
+  width: 100%;
+  left: 10em;
+  height: 10%;
+
+}
+div.bottom {
+    /* And 'bottom' is now at the left */
+    left: 0;
+    right: auto;
+    height: 100%;
+    width: 10em;
+}
+
+/* And now for stylistic changes */
+
+
+/* Make links back to inline, so they all fit on
+ * one line. And remove that background color. */
+div.left a {
+    display: inline;
+    background: inherit;
+}
+/* Make nice hovering though */
+div.left a.current, div.left a:hover {
+   background: #bca;
+}
+
+/* But download links should be on seperate lines. */
+div.bottom a {
+    display: block;
+    background: #bca;
+}
+
+/* Add some margin between "Menu" header and the links */
+div.left h2 {
+    margin-bottom: 0.2em;
+}
+
+/* Remove background as the background doesn't line up with the
+ * menu anymore */
+div.top h1 {
+    background: inherit;
+}
+/* Make abstract stand out, as it contains vital information
+ * on what's been changed.
+ */
+div.abstract {
+    border: 4px dotted #ab9;
+}
+
+/* Switch the old colors, ie. the actual 'left' is dark and so on. */
+div.bottom {
+    background: #ab9;
+}
+div.left {
+    background: #cdb;
+}

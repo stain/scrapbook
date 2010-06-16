@@ -1,0 +1,10 @@
+# Config file for forgetrc
+
+[source]
+url=http://www.soiland.no/rc/
+# Don't check for updates more often than X minutes
+# if check_update is -1, no updates are done automatically
+# (for offline sites)
+# if check_update is 0 - update check is done ALWAYS
+check_update: 5
+

@@ -1,0 +1,140 @@
+/*
+ * General styling for http://www.soiland.no/frames_with_css/
+ * Copyright (c) Stian Søiland <stian@soiland.no> 2004
+ *
+ * May be used freely as long as author is credited.
+ * 
+ */
+
+body {
+    font-family: Verdana, helvetica, sans-serif;
+    font-size: 80%;
+}
+
+
+/* Hide shine-through effect in Opera by having body (the shine through)
+'  and the .left the same color */ 
+body, div.top {
+    background: #bca;
+}
+
+div.left {
+    background: #ab9;
+}
+
+div.bottom {
+    background: #cdb;
+}
+
+/* Fancy header */
+div.top h1 {
+    display: relative;
+    font-size: 100%;
+    font-weight: bold;
+    background: #cdb;
+    left: -1em;
+    z-index: 2;
+    padding: 0.2em;
+    margin-top: 0.5em;
+    margin-bottom: 0;
+}
+
+/* The menu div.left */
+div.left h2, div.menu a {
+   font-size: 100%; 
+   font-weight: normal;
+   margin: 0;
+   background: #bca;
+   padding: 0.2em;
+   margin-top: 0.5em;
+}
+
+/* Ooo, I just wanted to do SOME fancy stuff */
+a:hover, div.menu a:hover {
+    background: #cdb;
+}
+
+div.left h2 {
+   color: #897;
+   font-style: italic;
+}
+
+div.menu a {
+   display: block;
+}
+div.menu a:active {
+   color: #efd;
+}
+
+div.menu a.current {
+   background: #cdb; 
+}
+
+/* Make links stand out */
+a:before {
+    content: "[";
+}
+a:after {
+    content: "]";
+}
+
+/* disable for the menu */
+div.menu a:before {
+    content: "";
+}
+div.menu a:after {
+    content: "";
+}
+
+a:link, a:visited, a:active {   
+   text-decoration: none;
+   color: #453;
+}
+
+div.left {
+    padding-left: 0.5em;
+}
+
+div.content {
+    padding-left: 0.3em;
+    padding-right: 0.3em;
+}
+
+div.content h2 {
+    font-size: 100%;
+    font-weight: bold;
+    margin-bottom: -1em; /* Eat <p> margin */
+    padding-bottom: 0;
+}
+
+div.abstract {
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 20%;
+    padding-right: 20%;
+    font-style: italic;
+}
+
+div.abstract h2 {
+    font-style: italic;
+}
+
+div.bottom {
+    padding-left: 0.3em;
+}
+
+dt {
+    font-style: italic;
+    margin-top: 1em;
+}
+dd {
+    margin-left: 0;
+    padding-left: 0;
+}
+div.bottom .inner {
+    font-size: 90%;
+    padding-top: 1em;
+}
+div.top .inner {
+    padding-bottom: 1em;
+}

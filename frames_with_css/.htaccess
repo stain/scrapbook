@@ -1,0 +1,7 @@
+Options +MultiViews
+php_value auto_prepend_file "tops.php"
+php_value auto_append_file  "bottom.php"
+php_value include_path "includez"
+php_value display_errors "1"
+php_value track_errors "1"
+php_value short_open_tag "off"

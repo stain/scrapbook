@@ -1,0 +1,147 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import popen2
+import time
+import tempfile
+import urllib
+import stat
+from systemArgs import systemArgs
+from systemArgs import ErrorcodeException
+from ConfigParser import ConfigParser
+
+(True, False) = (1==1, 0==1)
+
+class Checker:
+    def __init__(self, internal):
+        self.internal = internal
+        self.lockfile = os.path.join(internal, 'lock')
+        self.last_check = os.path.join(internal, '.last_check')
+        self.load_config()
+
+    def load_config(self):    
+        self.config = ConfigParser()
+        configfile = open((os.path.join(self.internal, "config")))
+        self.config.readfp(configfile)
+
+    def check_update(self):
+        check_update = self.config.getint("source", "check_update")
+        if check_update < 0:
+            # Don't check at all
+            return
+        try:
+            last_checked = os.stat(self.last_check)[stat.ST_MTIME]
+        except OSError:
+            last_checked = 0 
+        # Is it more than check_update minutes?
+        if (time.time() - last_checked) > check_update * 60:
+            self.check_server()
+            # BUG: Naive - even failed checks count as last_check
+            open(self.last_check, "w")
+
+    def lock(self):
+       # is there some old lock?
+       try:
+           last_locked = os.stat(self.lockfile)[stat.ST_MTIME]
+           if (time.time() - last_locked) > 3600*24: # 1 day
+               os.unlink(self.lockfile)
+       except OSError:
+           # the file might not exist or disappear before unlink 
+           pass    
+       try:
+           os.open(self.lockfile, os.O_CREAT|os.O_EXCL)
+           return True
+       except OSError:
+           return False   
+    
+    def unlock(self):
+        os.unlink(self.lockfile)       
+   
+    def new_version(self, urlpath, localfile):     
+        # Download dotfiles archive
+        url = self.config.get("source", "url")
+
+        try:
+            server_date = urllib.urlopen(url + urlpath).readline()
+        except:
+            return False
+
+        my_date = open(localfile).readline()
+
+        # BUG: Stops working in year 2100               
+        # MUST be a valid date =)
+        if server_date[:2] == "20" and server_date > my_date:
+           return True
+
+        return False   
+
+    def check_server(self):
+        # First - check if forgetrc it self has # been updated
+        if self.new_version('forgetrc.version',
+                os.path.join(self.internal, 'forgetrc.version')):
+           if not self.lock():
+               # Somebody else is fucking up
+               print "Should upgrade forgetrc, but lock file exists", self.lockfile
+               return
+           try:
+               print "Upgrading forgetrc"
+               program = os.path.join(self.internal, "update-forgetrc")
+               # and doing so without output
+               try:
+                    systemArgs(program, joinStdErr=1)
+               except ErrorcodeException, e:
+                   print e[1]
+               # Don't do anything more here, the new version is taking over
+           finally:    
+               self.unlock()
+           # Don't do anything more, forgetrc will take care    
+           return    
+
+        home = os.getenv("HOME")   
+        if self.new_version('dotfiles.version',
+                            os.path.join(home, '.dotfiles.version')):
+           if not self.lock():
+               # Somebody else is fucking up
+               print "Should upgrade dotfiles, but lock exists"
+               return
+           try:                  
+               print "Upgrading dotfiles"
+               program = os.path.join(self.internal, "update-dotfiles")
+               # and doing so without output
+               try:
+                   systemArgs(program, joinStdErr=1)
+               except ErrorcodeException, e:
+                   print e[1]
+           finally:    
+               self.unlock()
+        
+if __name__ == "__main__":
+    if sys.argv[1:]:
+        help = sys.argv[1]
+        if help in "-h --help".split():
+            print "Usage: %s" % sys.argv[0]
+            print "Downloads new dotfiles and installs them"
+            print "If destdir is not given, installs to $HOME"
+            sys.exit()
+        if sys.argv[1] in "-d --daemon".split():
+            if os.fork():
+              # We are not the child, so die and make the
+              # children an orphan, ie. daemon
+              # Works with sys.exit as well, magically enough.., but
+              # we'll do it proper with _exit
+              # sys.exit()
+              os._exit(0)
+
+            # Still here? Then you are the lucky child.
+            sys.stdin = open("/dev/null", "r")
+            sys.stdout = open("/dev/null", "a")
+            sys.stderr = open("/dev/null", "a")
+#            for file in (sys.stdin, sys.stderr, sys.stdout):
+#                os.close(file.fileno())
+#                file.close()        
+
+    internal=os.path.abspath(os.path.dirname(sys.argv[0]))
+    checker = Checker(internal)
+    checker.check_update()
+

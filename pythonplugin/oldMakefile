@@ -1,0 +1,3 @@
+all:
+	gcc -Wl,-E -DNDEBUG -g -O3 -Wall -Xlinker --export-dynamic -fPIC -I/usr/include/python2.3 -I/usr/include/multisync -I/usr/include/gtk-1.2 -I/usr/include/glib-1.2 -I/usr/lib/glib/include -I/usr/include/glib-1.2 -I/usr/lib/glib/include pythonplugin.c /usr/lib/python2.3/config/libpython2.3.a -lpthread -ldl  -lutil -lm -shared -Wl,-E -o libpythonplugin.so
+	cp multisync.py libpythonplugin.so /usr/lib/multisync

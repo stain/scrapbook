@@ -1,0 +1,23 @@
+div.left {
+    display: none;
+}
+div.bottom {
+    display: none;
+}
+div.top {
+    left: 0;
+}
+div.top h1 {
+    font-size: 200%;
+    padding: 0;
+}
+div.content h2 {
+    font-size: 150%;
+}
+body {
+    font-family: "Times New Roman", times, serif;
+    font-size: 10pt;
+}
+div.content {
+    padding: 0;
+}

@@ -1,0 +1,24 @@
+<search
+ version="0.1"
+ name="Google NTNU"
+ description="Searches all of NTNU with Google" 
+ action="http://www.google.com/univ/ntnu"
+ searchForm="http://www.google.com/univ/ntnu"
+ method="GET" >
+
+<input name="sourceid" value="Mozilla-search">
+<input name="q" user>
+
+<interpret 
+ resultListStart="<td class=mainresults>"
+ resultListEnd="</table>"
+ resultItemStart="<dt class=column>"
+ resultItemEnd="</dt>"
+>
+</search>
+
+<browser
+ update="http://soiland.no/plugins/gntnu.src" 
+ updateIcon="http://soiland.no/plugins/gntnu.png"
+ updateCheckDays="3" 
+>

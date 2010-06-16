@@ -1,0 +1,143 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import popen2
+import time
+import tempfile
+import urllib
+from systemArgs import systemArgs
+from ConfigParser import ConfigParser
+
+(True, False) = (1==1, 0==1)
+
+def pgp_verify(file, keyring):
+    cmd = ("gpg", "--help")
+    pgp = popen2.Popen3(cmd)
+    pgp.fromchild.read()
+    if pgp.wait():
+        print >>sys.stderr, "WARNING! Could not execute gpg"
+        return False
+    os.chmod(keyring, 0600)    
+    cmd = ("gpg", "--no-default-keyring",
+           "--keyring", keyring, 
+           "--trusted-key", "411063A3A0FFD119",
+           "--verify", file + ".asc", file)
+    pgp = popen2.Popen3(cmd)
+    if pgp.wait():
+        print >>sys.stderr, "WARNING WARNING!"
+        print >>sys.stderr, "Could NOT verify signature of file %s" % file
+        print >>sys.stderr, "Aborted."
+        # We will NEVER accept this!
+        sys.exit(99)
+    return True    
+
+
+
+def install(internal, dest, interactive=0):
+    config = ConfigParser()
+    config.readfp(open((os.path.join(internal, "config"))))
+    backup_dir = os.path.join(internal, 'backup', 
+                              time.strftime("%Y-%m-%d"))
+
+    # Download dotfiles archive
+    archive = tempfile.mktemp(".tar")
+    url = config.get("source", "url")
+    url += "dotfiles.tar"
+    print "Fetching dotfiles", url
+    urllib.urlretrieve(url, archive)
+    urllib.urlretrieve(url+".asc", archive+".asc")
+    if not pgp_verify(archive, os.path.join(internal, "gpg-keyring")):
+        if not interactive:
+            # we won't update interactive without signature 
+            sys.exit(98)
+        print "HINT: Check %s.asc somewhere else" % url    
+        print "Do you still want to continue, unprotected? (Y/N)"
+        answer = raw_input()
+        if not answer in "yY":
+            sys.exit(98)
+
+    #print "unpacking", archive
+    # go somewhere alone
+    tempdir = tempfile.mktemp()
+    os.mkdir(tempdir, 0700)
+    os.chdir(tempdir)
+    # might fail  
+    tar = popen2.Popen3(("tar", "xf", archive))
+    if tar.wait():
+        print "Could not untar", archive
+        sys.exit(1)
+
+    # Assume a dir 'dotfiles' was made
+    tempdir = os.path.join(tempdir, "dotfiles")
+    os.chdir(tempdir)
+
+    # Install dotfiles
+    print "Installing dotfiles"
+    install_dir(tempdir, dest, backup_dir, hide=1)
+
+
+def install_dir(from_dir, to_dir, backup_dir, hide=0):
+    if not os.path.isdir(to_dir):
+        if os.path.lexists(to_dir):
+            # some file laying around, but now we're a dir, backup
+            # in the directory above
+            move_to_backup(to_dir, os.path.join(backup_dir, ".."))
+        else:    
+            os.mkdir(to_dir)
+    for file in os.listdir(from_dir):
+        from_file = os.path.join(from_dir, file)
+        if hide:
+            to_file = os.path.join(to_dir, "."+file)
+        else:
+            to_file = os.path.join(to_dir, file)
+        if os.path.isdir(from_file):
+            # recurse, remember to add a dot to backup_dir if needed
+            if hide:
+                new_backup_dir = os.path.join(backup_dir, "."+file)
+            else:    
+                new_backup_dir = os.path.join(backup_dir, file)
+            install_dir(from_file, to_file, new_backup_dir)
+        else:
+            install_file(from_file, to_file, backup_dir)
+
+def move_to_backup(original, backup_dir):            
+    if not os.path.isdir(backup_dir):
+        os.makedirs(backup_dir)
+    try:
+        systemArgs("mv", original, backup_dir)
+    except:
+        print "Could not backup %s, aborting" % original
+        sys.exit(2)
+            
+
+def install_file(from_file, to_file, backup_dir):
+    if os.path.lexists(to_file):
+        move_to_backup(to_file, backup_dir)
+    try:
+        systemArgs("cp", "-R", from_file, to_file)
+    except:
+        print "Could not install %s, aborting" % to_file
+        sys.exit(3)
+        
+if __name__ == "__main__":
+    if sys.argv[1:]:
+        dest = sys.argv[-1]
+    else:    
+        dest = os.getenv("HOME")
+        
+    if "-h" in sys.argv or "--help" in sys.argv:
+        print "Usage: %s [-s] [destdir]" % sys.argv[0]
+        print "Downloads new dotfiles and installs them"
+        print "If destdir is not given, installs to $HOME"
+        print "-s     scripted call (non-interactive)"
+        sys.exit()
+
+    if "-s" in sys.argv:
+        interactive = False
+    else:
+        interactive = True    
+            
+    internal = os.path.abspath(os.path.dirname(sys.argv[0]))
+    install(internal, dest, interactive) 
+

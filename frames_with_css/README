@@ -1,0 +1,16 @@
+Magic to do 'frames' from CSS
+=============================
+
+(c) Stian Søiland <stian@soiland.no> 2004-2005
+  
+Parts of the CSS is copied freely from
+the site http://devnull.tagsoup.com/fixed/
+Many thanks to Eric Bednarz <devnull@tagsoup.com>
+ 
+You may use/modify/distribute/etc this source for free as long as you
+keep the above copyright notices. 
+
+For more information, see http://soiland.no/frames_with_css or just
+place these files into a web directory on a server running PHP.
+
+This version last updated 2005-02-21.

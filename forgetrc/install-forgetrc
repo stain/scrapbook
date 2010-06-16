@@ -1,0 +1,67 @@
+#!/usr/bin/env python
+
+import os
+import sys
+import popen2
+import time
+from systemArgs import systemArgs
+
+# Were WE are installed (not our dot-files)
+INTERNAL=".forgetrc"
+
+# Don't replace these files
+KEEPFILES="backup lock config".split()
+
+
+def install(source, dest):
+    internal_dest = os.path.join(dest, INTERNAL)
+    if not os.path.isdir(internal_dest):
+        os.mkdir(internal_dest)
+    backup_dir = os.path.join(internal_dest, 'backup', 
+                              INTERNAL + "-" + time.strftime("%Y-%m-%d"))
+    if not os.path.isdir(backup_dir):
+        os.makedirs(backup_dir)
+    
+    # Move away all existing files
+    for file in os.listdir(internal_dest):
+        if file in KEEPFILES:
+            continue
+        try:
+            systemArgs("mv", os.path.join(internal_dest, file), backup_dir)                
+        except:
+            print "Could not backup %s, aborting" % os.path.join(internal_dest, file)
+            sys.exit(2)
+             
+    # Install our files
+    print "Installing internal files"
+    for file in os.listdir(source):
+        if file in KEEPFILES and \
+            os.path.lexists(os.path.join(internal_dest, file)):
+            continue
+        try:
+            systemArgs("cp", "-R", os.path.join(source, file), internal_dest)
+        except:
+            print "Could not install %s, aborting" % file
+            sys.exit(3)
+    
+    # Run the dotfile-updater
+    dotfile = os.path.join(internal_dest, "update-dotfiles")
+    try:
+        os.execl(dotfile, dotfile, dest)
+    except:
+        print "Could not execute", dotfile    
+        sys.exit(4)
+        
+if __name__ == "__main__":
+    if sys.argv[1:]:
+        dest = sys.argv[1]
+        if dest in "-h --help".split():
+            print "Usage: %s [destdir]" % sys.argv[0]
+            print "Installs forgetrc and dotfiles to destdir."
+            print "If destdir is not given, installs to $HOME"
+            sys.exit()
+    else:    
+        dest= os.getenv("HOME")
+    source=os.path.abspath(os.path.dirname(sys.argv[0]))
+    install(source, dest) 
+

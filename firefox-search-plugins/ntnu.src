@@ -1,0 +1,25 @@
+<search
+ version="0.1"
+ name="NTNU"
+ description="Searches all of NTNU" 
+ action="http://sok.ntnu.no/"
+ searchForm="http://sok.ntnu.no/"
+ method="GET" >
+
+<input name="sourceid" value="Mozilla-search">
+<input name="type" value="all">
+<input name="query" user>
+
+<interpret 
+ resultListStart="<td class=mainresults>"
+ resultListEnd="</table>"
+ resultItemStart="<dt class=column>"
+ resultItemEnd="</dt>"
+>
+</search>
+
+<browser
+ update="http://soiland.no/plugins/ntnu.src" 
+ updateIcon="http://soiland.no/plugins/ntnu.png"
+ updateCheckDays="3" 
+>

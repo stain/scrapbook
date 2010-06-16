@@ -1,0 +1,52 @@
+<html>
+
+<head>
+  <script type="text/javascript">
+  function addEngine(name,ext,cat)
+{
+  if ((typeof window.sidebar == "object") && (typeof
+  window.sidebar.addSearchEngine == "function"))
+  {
+    //cat="Web";
+    //cat=prompt("In what category should this engine be installed?","Web")
+    window.sidebar.addSearchEngine(
+      "http://soiland.no/plugins/"+name+".src",
+      "http://soiland.no/plugins/"+name+"."+ext,
+      name,
+      cat );
+  }
+  else
+  {
+    errorMsg(name,ext,cat);
+  }
+}
+  </script>
+</head>
+
+<body>
+<h1>Søkemotorplugins for NTNU</h1>
+<p>
+ Ved å legge til spesielle søkemotorer kan du søke på NTNU-ting
+ i den boksen oppe i høyre hjørne i Firefox.
+</p>
+<p>
+Legg til søkemotoren 
+   <a href="javascript:addEngine('innsida', 'png', 'NTNU');">Innsida</a>,
+   <a href="javascript:addEngine('telefonkat', 'png',
+   'NTNU');">Telefonkatalogen på NTNU</a>,
+   <a href="javascript:addEngine('ntnu', 'png',
+   'NTNU');">NTNUs søkemotor</a>,
+   <a href="javascript:addEngine('gntnu', 'png',
+   'NTNU');">Google NTNU</a>
+   </p>
+
+   <p>
+   Merk at på Linux kan det være du må kjøre Firefox som root for
+   å klare å legge til slike plugins.
+
+   </p>
+   <hr />
+   <p>Stian Søiland osv.</p>
+</body>
+
+</html>

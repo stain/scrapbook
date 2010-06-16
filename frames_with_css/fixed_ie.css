@@ -1,0 +1,87 @@
+/* IE workarounds for having 'fixed frames' with CSS
+ *
+ * (c) Stian Søiland <stian@soiland.no> 2004
+ *
+ * Parts of this file is copied freely from
+ * the site http://devnull.tagsoup.com/fixed/
+ * Many thanks to Eric Bednarz <devnull@tagsoup.com>
+ *
+ * You may use/modify/distribute/etc this source for free as long as you
+ * keep the above copyright notices. 
+ * 
+ * 
+ * NOTE - IE 6 must be set in "standard-compliant" mode by
+ * sending correct HTML. In addition, this stylesheet
+ * should only be included by IE browsers.
+ * 
+ * The HTML should start with something like this:
+ * 
+ * <?xml version="1.0" lang="en" ?>
+ * <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+ * <html lang="en">
+ *   <head>
+ *     <title>Emulating frames with CSS</title>
+ * 
+ *     <!-- Make a 'frameset' with three parts. -->
+ *     <link rel="stylesheet" type="text/css" 
+             media="screen" href="fixed.css" />
+ *     <!--[if IE]>
+ *     <link rel="stylesheet" type="text/css" 
+             media="screen" href="fixed_ie.css" />
+ *     <![endif]-->
+ *   </head>
+ * 
+ * Other doctypes, like XHTML strict and so on should
+ * work as well. The <?xml>-thingie IS needed. (try without!)
+ *
+ * References:
+ * http://gutfeldt.ch/matthias/articles/doctypeswitch.html
+ * http://msdn.microsoft.com/library/en-us/dnie60/html/cssenhancements.asp
+ * 
+ */
+
+/* As we manage everything our self, never show the 
+   normal scrollbars as they tend to appear without 
+   reason.
+ */
+body {
+    overflow: hidden;
+}
+
+/* Make sure the inner parts of .top and .bottom are exactly 
+   the same width.
+   (Avoids IE-bug: Without this, equal wide boxes will vary
+   with some pixels, displacing scrollbars. The
+   variation seems to be related to which content is
+   inside the box, ie. to boxes with the same TEXT have 
+   the same width, while two witout the same text may
+   differ.)
+ */
+div.inner {
+    width: 100%;
+}
+
+div.top,div.bottom {
+    /* Don't show horisontal scrollbar, it only
+       messes things up. You might want to turn
+       off overflow-y too, but do that in fixed.css */
+    overflow-x: hidden;
+    /* Abort rest of stylesheet for IE 5.x */
+    voice-family: "\"}\""; 
+    voice-family:inherit;
+    /* Try to move the scrollbar further to the right edge,
+       avoid stupid whitespace on the right side of the
+       scrollbars. 
+
+       There is no reason for selecting -14px, -15px seems
+       to work as well. The actual pixel value MAY be dependent
+       on DPI settings etc. on the client. There isn't much to do
+       about this..
+     */
+    right: -14px;
+    /* Make sure that the text doesn't flow outside the edge in
+       those cases where the scrollbar isn't present. (and the
+       box width actually DO fit with the right edge 
+     */
+    padding-right: 16px;
+}
