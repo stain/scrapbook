@@ -1,0 +1,47 @@
+Betale semesteravgift is after Får studieplass
+Betale semesteravgift is before Hente studielån
+Betale semesteravgift meets Melde til eksamen
+Betale semesteravgift is after Søker om studieplass
+Eksamen is after Finne hybel
+Eksamen is after Flytte
+Eksamen is after Prosjekt
+Eksamen finishes Studerer
+Finne hybel is before Eksamen
+Finne hybel is before Flytte
+Finne hybel is before Kjøpe bøker
+Flytte is before Eksamen
+Flytte is after Finne hybel
+Flytte is before Kjøpe bøker
+Flytte is before Studerer
+Får semesterkort is after Melde til eksamen
+Får semesterkort is before Studentrabatt på bussen
+Får semesterkort is after Søker om studieplass
+Får studieplass is before Betale semesteravgift
+Får studieplass is after Søker om studieplass
+Hente studielån is after Betale semesteravgift
+Hente studielån is before Kjøpe bøker
+Hente studielån is after Søke om studielån
+Hente studielån is after Søker om studieplass
+Kjøpe bøker is after Finne hybel
+Kjøpe bøker is after Flytte
+Kjøpe bøker is after Hente studielån
+Kjøpe bøker is during Studerer
+Kjøpe bøker is after Søker om studieplass
+Melde til eksamen is met by Betale semesteravgift
+Melde til eksamen is before Får semesterkort
+Melde til eksamen is after Søker om studieplass
+Prosjekt is before Eksamen
+Prosjekt is during Studerer
+Studentrabatt på bussen is after Får semesterkort
+Studentrabatt på bussen is after Søker om studieplass
+Studerer is after Flytte
+Studerer contains Kjøpe bøker
+Studerer contains Prosjekt
+Søke om studielån is before Hente studielån
+Søker om studieplass is before Betale semesteravgift
+Søker om studieplass is before Får semesterkort
+Søker om studieplass is before Får studieplass
+Søker om studieplass is before Hente studielån
+Søker om studieplass is before Kjøpe bøker
+Søker om studieplass is before Melde til eksamen
+Søker om studieplass is before Studentrabatt på bussen

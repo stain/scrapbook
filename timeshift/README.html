@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="latin1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=latin1" />
+<meta name="generator" content="Docutils 0.2.8: http://docutils.sourceforge.net/" />
+<link rel="stylesheet" href="default.css" type="text/css" />
+</head>
+<body>
+<div class="document">
+<div class="section" id="timeshift">
+<h1><a name="timeshift">Timeshift</a></h1>
+<table class="field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field"><th class="field-name">Authors:</th><td class="field-body">Stian Søiland &lt;<a class="reference" href="mailto:stian&#64;soiland.no">stian&#64;soiland.no</a>&gt;,
+Marianne Lund Jacobsen &lt;<a class="reference" href="mailto:mariaj&#64;stud.ntnu.no">mariaj&#64;stud.ntnu.no</a>&gt;</td>
+</tr>
+<tr class="field"><th class="field-name">Date:</th><td class="field-body">2004-10-23</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="requirements">
+<h1><a name="requirements">Requirements</a></h1>
+<p>This project requires Python 2.2. The module sets.py from Python 2.3 is
+included.</p>
+</div>
+<div class="section" id="usage">
+<h1><a name="usage">Usage</a></h1>
+<ol class="arabic">
+<li><p class="first">Create a seperate Python module creating the events and 
+a TimeNet to store the time relations between them:</p>
+<blockquote>
+<p>example.py:</p>
+<pre class="literal-block">
+#!/usr/bin/env python
+
+from timeshift import *
+import relation
+
+E1 = Event(&quot;E1&quot;, &quot;Mary went to the airport&quot;)
+E2 = Event(&quot;E2&quot;, &quot;Peter bought a car&quot;)
+E3 = Event(&quot;E3&quot;, &quot;Peter drove Mary to the airport&quot;)
+E4 = Event(&quot;E4&quot;, &quot;Mary flew from Trondheim to Oslo&quot;)
+
+net = TimeNet()
+net.addrelation(relation.before, E1, E4) # went before flew
+net.addrelation(relation.before, E2, E3) # bought before drove
+net.addrelation(relation.equals, E1, E3) # drove and went at same time
+
+# Check one particular relation, what about her flight
+# and Peters car purchase?
+print E4, net.net[E4,E1], E1
+
+# Print all 'known' knowledge
+net.print_knowledge()
+</pre>
+</blockquote>
+</li>
+<li><p class="first">Run the module and examine the results:</p>
+<pre class="literal-block">
+: stain&#64;ozelot ~/timeshift;python example.py
+E4 Set([&gt;]) E1
+Mary flew from Trondheim to Oslo is after Mary went to the airport
+Mary flew from Trondheim to Oslo is after Peter bought a car
+Mary flew from Trondheim to Oslo is after Peter drove Mary to the airport
+Mary went to the airport is before Mary flew from Trondheim to Oslo
+Mary went to the airport is after Peter bought a car
+Mary went to the airport equals Peter drove Mary to the airport
+Peter bought a car is before Mary flew from Trondheim to Oslo
+Peter bought a car is before Mary went to the airport
+Peter bought a car is before Peter drove Mary to the airport
+Peter drove Mary to the airport is before Mary flew from Trondheim to Oslo
+Peter drove Mary to the airport equals Mary went to the airport
+Peter drove Mary to the airport is after Peter bought a car
+</pre>
+<p>The first outputted line shows that the only possible relation
+between E4 and E1 is &gt; - meaning that E4 is after E1, Mary's flight
+was after Peter's car purchase</p>
+<p>The other output is all the knowledge that the system knows 'for
+sure'. Such knowledge is relations between nodes where there is only
+one possible relation.  Note that this includes the basic facts
+initially added and their inverse values.  (Ie both &quot;E1 before E4&quot;
+and &quot;E4 after E1&quot;).</p>
+<p>Relations between other nodes (events) are not printed, as there
+is only partly or no knowledge on what relations might exist.
+In more advanced examples, this could be relations such that 
+'E1 is before, finishes, during or meeting E2'.</p>
+</li>
+</ol>
+</div>
+<div class="section" id="included-files">
+<h1><a name="included-files">Included files</a></h1>
+<p>These are the files included:</p>
+<table class="table" frame="border" rules="all">
+<colgroup>
+<col width="15%" />
+<col width="85%" />
+</colgroup>
+<thead valign="bottom">
+<tr><th>Filename</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr><td>sets.py</td>
+<td>Basic sets operations from Python 2.3, included for
+compatibility</td>
+</tr>
+<tr><td>trans.txt</td>
+<td>transitivity matrix from <a class="citation-reference" href="#allen" id="id1" name="id1">[Allen]</a>, fig.4</td>
+</tr>
+<tr><td>trans.py</td>
+<td>Simple parser for trans.txt</td>
+</tr>
+<tr><td>relation.py</td>
+<td>Representation of relations such as 'before' and 'after.
+All time relations from <a class="citation-reference" href="#allen" id="id2" name="id2">[Allen]</a>, fig.2 are defined, including their
+inversion and possible transitions from trans.py</td>
+</tr>
+<tr><td>timeshift.py</td>
+<td><p class="first">Main engine for creating a net of events and their
+relations.</p>
+<p>Implements Constraints(R1,R2) and Add R(i,j) from <a class="citation-reference" href="#allen" id="id3" name="id3">[Allen]</a>.</p>
+<p class="last">Includes a method print_knowledge for printing 'everything
+known for sure'.</p>
+</td>
+</tr>
+<tr><td>example.py</td>
+<td>Simple example from <a class="citation-reference" href="#it3706" id="id4" name="id4">[it3706]</a></td>
+</tr>
+<tr><td>trening.py</td>
+<td>A slightly more complicated example representing the
+events during a training session for a person attending
+dance classes.</td>
+</tr>
+<tr><td>skole.py</td>
+<td>A complex example representing a person starting his
+student career at the university.</td>
+</tr>
+<tr><td>skole.vsd</td>
+<td>A graphical representation of the relations given
+in skole.py, format: Microsoft Visio</td>
+</tr>
+<tr><td>skole.svg</td>
+<td>Exported version of skole.vsd, SVG (Vector graphics)</td>
+</tr>
+<tr><td>skole.png</td>
+<td>Exported version of skole.vsd, PNG (Raster graphics)</td>
+</tr>
+<tr><td>skole.txt</td>
+<td>Results of running skole.py, ie. all 'for sure'
+knowledge produced by timeshift.</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="note">
+<h1><a name="note">Note</a></h1>
+<p>There is a (intended?) bug in the Add-algorithm in <a class="citation-reference" href="#allen" id="id5" name="id5">[Allen]</a>. Allen's first
+for-loop finds new transitivity information for N(k,j), but then checks
+R(k,i) for new information instead of R(k,j). The fix is to replace
+(k,i) with (k,j) in the if-test:</p>
+<pre class="literal-block">
+if R(k,j) ispropersubset N(k,j)
+    then add &lt;k,j&gt; to ToDo;
+</pre>
+</div>
+<div class="section" id="references">
+<h1><a name="references">References</a></h1>
+<table class="citation" frame="void" id="allen" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<col />
+<tbody valign="top">
+<tr><td class="label"><a name="allen">[Allen]</a></td><td><em>(<a class="fn-backref" href="#id1">1</a>, <a class="fn-backref" href="#id2">2</a>, <a class="fn-backref" href="#id3">3</a>, <a class="fn-backref" href="#id5">4</a>)</em> James F. Allen, Maintaining Knowledge about Temporal Intervals
+Communications of the ACM, nov 1983, vol. 26, num 11</td></tr>
+</tbody>
+</table>
+<table class="citation" frame="void" id="it3706" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<col />
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id4" name="it3706">[it3706]</a></td><td>Project descriptions for IT3706 Knowledge representation
+IDI, NTNU, 2004.
+<a class="reference" href="http://www.idi.ntnu.no/emner/it3706/assignment/project.html">http://www.idi.ntnu.no/emner/it3706/assignment/project.html</a></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>

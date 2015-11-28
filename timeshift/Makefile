@@ -1,0 +1,107 @@
+#!/usr/bin/env make
+# General Makefile to generate tex, pdf, ps and html from 
+# reStructuredText (http://docutils.sourceforge.net/rst.html)
+# 
+# $Id: Makefile,v 1.14 2004/04/05 17:18:08 stain Exp stain $
+# 
+# Copyright (c) 2003 Stian Søiland <stian@soiland.no>
+# 
+# Permission is hereby granted, free of charge, to any person obtaining
+# a copy of this software and associated documentation files (the
+# "Software"), to deal in the Software without restriction, including
+# without limitation the rights to use, copy, modify, merge, publish,
+# distribute, sublicense, and/or sell copies of the Software, and to
+# permit persons to whom the Software is furnished to do so, subject to
+# the following conditions:
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+# IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+# CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+# TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+# SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# 
+# Requirements:
+# docutils
+# latex
+# pdflatex
+
+# The document to make! (without extension)
+FILE=README
+# some paths and stuff
+DOCUTILS=/store/share/python-docutils
+# where to 'install' the result
+PREFIX=$(HOME)/public_html/$(FILE)
+URL=$(WWW_HOME)~$(LOGNAME)/$(FILE)
+# should be in path (/store/bin or /usr/bin)
+REST2LATEX=rest2latex
+REST2HTML=rest2html
+# this is appended to REST2*-commands to undo the redirectional making
+# of a file even if the command failed.
+UNDO=|| (mv $@ $@.rejec ; false)
+# encoding of produced files
+ENC=latin1
+RESTOPTS=--output-encoding=$(ENC) --halt=2
+# ignore stylesheets
+TEXSTYLE=
+# how to print
+PRINT=lpr -Plerkendallaser@printhost.itea.ntnu.no
+# where is gnu install
+INSTALL=install
+# which chmod?
+INSTALLMODE=644
+# What to install
+INSTALLFILES=$(FILE).txt $(FILE).ps $(FILE).pdf $(FILE).html default.css
+
+
+# ok, the targets
+all: html ps pdf
+html: $(FILE).html default.css
+ps: $(FILE).ps	
+pdf: $(FILE).pdf
+view: $(FILE).ps
+	gv $?
+print: $(FILE).ps
+	$(PRINT) $?
+
+# the details
+default.css:
+	cp $(DOCUTILS)/stylesheets/default.css $@
+$(FILE).html: $(FILE).txt
+	$(REST2HTML) $(RESTOPTS) $? > $@ $(UNDO)
+$(FILE).ps: $(FILE).dvi
+	dvips -o $@ $?
+$(FILE).dvi: $(FILE).tex
+	latex $? && latex $?
+$(FILE).pdf: $(FILE).tex
+	pdflatex $?
+$(FILE).tex: $(FILE).txt
+	$(REST2LATEX) $(RESTOPTS) --stylesheet=$(TEXSTYLE) $? > $@ $(UNDO)
+
+# the install
+install: html ps pdf
+	$(INSTALL) -d $(PREFIX)
+	echo 'IndexOptions NameWidth=*' > $(PREFIX)/.htaccess
+	$(INSTALL) -m $(INSTALLMODE) $(INSTALLFILES) $(PREFIX)
+	@echo
+	@echo TXT, HTML, PDF and PS of $(FILE) published.  Visit:
+	@echo $(URL)/
+
+uninstall:
+	for file in $(INSTALLFILES) .htaccess; do rm -f $(PREFIX)/$$file; done    
+	rmdir $(PREFIX)
+
+# the cleaning	
+postclean:	
+	# Just deletes files that are normally not needed afterwards	
+	-rm -f *.dvi *.idx *.dvi *.toc *.lot *.aux *.ilg *.ind \
+	*.out *.lof *.bbl *.log $(FILE).tex
+clean: postclean
+	# No.. don't remove $(INSTALLFILES) - that includes $(FILE).txt! =)
+	-rm -f *~ $(FILE).ps $(FILE).html $(FILE).tex $(FILE).pdf *.rejec
+distclean: clean
+	-rm -f default.css
